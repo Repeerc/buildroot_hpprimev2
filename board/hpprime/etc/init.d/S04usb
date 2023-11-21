@@ -1,0 +1,40 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    mount -t configfs none /sys/kernel/config
+    cd /sys/kernel/config/
+    cd usb_gadget
+    mkdir g1
+    cd g1
+    echo "0x04D8" > idVendor
+    echo "0x1234" > idProduct
+    mkdir strings/0x409
+    echo "0123456789" > strings/0x409/serialnumber
+    echo "Microchip Technology, Inc." > strings/0x409/manufacturer
+    echo "Linux USB Gadget" > strings/0x409/product
+    mkdir functions/rndis.usb0
+    #mkdir functions/acm.usb0
+    mkdir configs/c.1
+    mkdir configs/c.1/strings/0x409
+    #echo "CDC ACM+RNDIS" > configs/c.1/strings/0x409/configuration
+    echo "HP PRIME V2 RNDIS" > configs/c.1/strings/0x409/configuration
+    ln -s functions/rndis.usb0 configs/c.1
+    #ln -s functions/acm.usb0 configs/c.1
+    echo "s3c-hsudc" > UDC
+    cd /
+	;;
+  stop)
+	echo '' > /sys/kernel/config/usb_gadget/g1/UDC
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+
+

@@ -1,0 +1,7 @@
+[ubifs]
+mode=ubi
+image=BR2_ROOTFS_UBIFS_PATH
+vol_id=0
+vol_type=dynamic
+vol_name=rootfs
+vol_flags=autoresize
